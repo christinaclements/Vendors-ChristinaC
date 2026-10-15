@@ -6,7 +6,7 @@ import java.util.HashMap;
  * well as the current balance of money that has been deposited into the machine.
  */
 class Vending {
-    private static HashMap<String, Item> Stock = new HashMap<String,Item>();
+    private HashMap<String, Item> Stock = new HashMap<String,Item>();
     private double balance;
 
     Vending(int numCandy, int numGum) {

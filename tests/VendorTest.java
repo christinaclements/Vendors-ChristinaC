@@ -64,4 +64,13 @@ public class VendorTest {
         vendor.restock("Candy", -5);
         assertEquals(2, vendor.getStock("Candy"));
     }
+    @Test
+    void vendorsHaveSeparateStocks() {
+        Vending first = new Vending(5, 5);
+        Vending second = new Vending(5, 5);
+        first.addMoney(1.25);
+        first.select("Candy");
+        assertEquals(4, first.getStock("Candy"));
+        assertEquals(5, second.getStock("Candy"));
+    }
 }
