@@ -119,6 +119,23 @@ class Vending {
             Stock.put(newName, item);
         }
     }
+
+    /** builds a text listing of every item, how many are in stock, and its price */
+    String getInventory() {
+        String result = "";
+        for (String name : Stock.keySet()) {
+            Item item = Stock.get(name);
+            result = result + name + ": " + item.stock + " in stock, $"
+                    + String.format("%.2f", item.price) + "\n";
+            //String format so it displays nice as $0.50
+        }
+        return result;
+    }
+
+    /** prints this machine's inventory to the console */
+    void printInventory() {
+        System.out.print(getInventory());
+    }
 }
 
 class Examples {

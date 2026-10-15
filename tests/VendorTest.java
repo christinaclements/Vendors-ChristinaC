@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VendorTest {
 
@@ -110,7 +111,7 @@ public class VendorTest {
         assertEquals(5.00, vendor.getBalance());
     }
     @Test
-    void renameItemKeepsStockAndPrice() {
+    void renameItem() {
         Vending vendor = new Vending(5, 5);
         vendor.renameItem("Gum", "Bubblegum");
         // The stock should move to the new name, and the old name should be gone
@@ -131,7 +132,7 @@ public class VendorTest {
     }
 
     @Test
-    void renameWithInvalidItem() {
+    void renameWithInvalidName() {
         Vending vendor = new Vending(5, 5);
         // Try to rename an item that doesn't exist
         vendor.renameItem("Chips", "Crisps");
@@ -139,5 +140,12 @@ public class VendorTest {
         // Try to rename Gum to an empty name
         vendor.renameItem("Gum", "");
         assertEquals(5, vendor.getStock("Gum"));
+    }
+    @Test
+    void inventoryListTest() {
+        Vending vendor = new Vending(5, 5);
+        String inventory = vendor.getInventory();
+        assertTrue(inventory.contains("Candy: 5 in stock, $1.25"));
+        assertTrue(inventory.contains("Gum: 5 in stock, $0.50"));
     }
 }
