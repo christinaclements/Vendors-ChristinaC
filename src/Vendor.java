@@ -40,7 +40,11 @@ class Vending {
     void select (String name) {
         if (Stock.containsKey(name)) {
             Item item = Stock.get(name);
-            if (balance >= item.price) {
+            if (item.stock <= 0){
+                //checks item is in stock
+                System.out.println("Sorry, that item is out of stock");
+            }
+            else if (balance >= item.price) {
                 item.purchase(1);
                 this.balance = this.balance - item.price;
             }
