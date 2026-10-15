@@ -120,6 +120,18 @@ class Vending {
         }
     }
 
+    /** removes an item from the machine
+     * @param name The name of the item to remove
+     */
+    void removeItem(String name) {
+        if (Stock.containsKey(name)) {
+            Stock.remove(name);
+        }
+        else {
+            System.out.println("Sorry, don't know that item");
+        }
+    }
+
     /** builds a text listing of every item, how many are in stock, and its price */
     String getInventory() {
         String result = "";

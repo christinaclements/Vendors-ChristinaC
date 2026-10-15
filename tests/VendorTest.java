@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VendorTest {
 
@@ -142,10 +141,34 @@ public class VendorTest {
         assertEquals(5, vendor.getStock("Gum"));
     }
     @Test
-    void inventoryListTest() {
+    void inventoryList() {
         Vending vendor = new Vending(5, 5);
         String inventory = vendor.getInventory();
         assertTrue(inventory.contains("Candy: 5 in stock, $1.25"));
         assertTrue(inventory.contains("Gum: 5 in stock, $0.50"));
+    }
+    @Test
+    void removeItem() {
+        Vending vendor = new Vending(5, 5);
+        vendor.removeItem("Gum");
+        assertFalse(vendor.getInventory().contains("Gum"));
+        assertEquals(5, vendor.getStock("Candy"));
+    }
+
+    @Test
+    void cannotBuyRemovedItem() {
+        Vending vendor = new Vending(5, 5);
+        vendor.removeItem("Candy");
+        vendor.addMoney(2.00);
+        vendor.select("Candy");
+        assertEquals(2.00, vendor.getBalance());
+    }
+
+    @Test
+    void removeUnknownItem() {
+        Vending vendor = new Vending(5, 5);
+        vendor.removeItem("Chips");
+        assertEquals(5, vendor.getStock("Candy"));
+        assertEquals(5, vendor.getStock("Gum"));
     }
 }
