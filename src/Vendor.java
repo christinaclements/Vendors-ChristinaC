@@ -49,7 +49,18 @@ class Vending {
         }
         else System.out.println("Sorry, don't know that item");
     }
-
+    /** returns how many of the named item are in stock, or 0 if the item doesn't exist
+     * @param name The name of the item ("Candy" or "Gum")
+     */
+    int getStock(String name) {
+        if (Stock.containsKey(name)) {
+            Item item = Stock.get(name);
+            return item.stock;
+        }
+        else {
+            return 0;
+        }
+    }
 }
 
 class Examples {
