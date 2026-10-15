@@ -99,6 +99,26 @@ class Vending {
             Stock.put(name, new Item(price, amount));
         }
     }
+    /** changes the name of an item, keeping its price and stock
+     * @param oldName The item's current name
+     * @param newName The name to change it to
+     */
+    void renameItem(String oldName, String newName) {
+        if (!Stock.containsKey(oldName)) {
+            System.out.println("Sorry, don't know that item");
+        }
+        else if (newName == null || newName.isEmpty()) {
+            System.out.println("New name can't be empty");
+        }
+        else if (Stock.containsKey(newName)) {
+            System.out.println("An item with that name already exists");
+        }
+        else {
+            // Take the item out under its old name, amd put it back under the new name
+            Item item = Stock.remove(oldName);
+            Stock.put(newName, item);
+        }
+    }
 }
 
 class Examples {

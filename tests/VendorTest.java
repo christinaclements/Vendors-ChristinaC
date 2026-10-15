@@ -109,4 +109,35 @@ public class VendorTest {
         assertEquals(0, vendor.getStock("Soda"));
         assertEquals(5.00, vendor.getBalance());
     }
+    @Test
+    void renameItemKeepsStockAndPrice() {
+        Vending vendor = new Vending(5, 5);
+        vendor.renameItem("Gum", "Bubblegum");
+        // The stock should move to the new name, and the old name should be gone
+        assertEquals(5, vendor.getStock("Bubblegum"));
+        assertEquals(0, vendor.getStock("Gum"));
+        vendor.addMoney(0.50);
+        vendor.select("Bubblegum");
+        assertEquals(4, vendor.getStock("Bubblegum"));
+        assertEquals(0.0, vendor.getBalance());
+    }
+
+    @Test
+    void renameToExistingName() {
+        Vending vendor = new Vending(5, 5);
+        vendor.renameItem("Gum", "Candy");
+        assertEquals(5, vendor.getStock("Candy"));
+        assertEquals(5, vendor.getStock("Gum"));
+    }
+
+    @Test
+    void renameWithInvalidItem() {
+        Vending vendor = new Vending(5, 5);
+        // Try to rename an item that doesn't exist
+        vendor.renameItem("Chips", "Crisps");
+        assertEquals(0, vendor.getStock("Crisps"));
+        // Try to rename Gum to an empty name
+        vendor.renameItem("Gum", "");
+        assertEquals(5, vendor.getStock("Gum"));
+    }
 }
