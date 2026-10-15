@@ -81,6 +81,24 @@ class Vending {
             System.out.println("Sorry, don't know that item");
         }
     }
+    /** restocks an item, adding it to the machine as a new item if it isn't there yet
+     * @param name The name of the item
+     * @param amount How many pieces to add (must be positive)
+     * @param price The price to use if this is a new item (must be positive)
+     */
+    void restock(String name, int amount, double price) {
+        if (Stock.containsKey(name)) {
+            // Item already exists, so just add stock and keep its current price
+            restock(name, amount);
+        }
+        else if (amount <= 0 || price <= 0) {
+            System.out.println("Amount and price must be positive");
+        }
+        else {
+            // Item is new, so create it with the given price and amount
+            Stock.put(name, new Item(price, amount));
+        }
+    }
 }
 
 class Examples {

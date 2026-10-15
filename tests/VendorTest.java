@@ -73,4 +73,40 @@ public class VendorTest {
         assertEquals(4, first.getStock("Candy"));
         assertEquals(5, second.getStock("Candy"));
     }
+    @Test
+    void restockingNewInventory() {
+        Vending vendor = new Vending(5, 5);
+        vendor.restock("Chips", 4, 1.00);
+        assertEquals(4, vendor.getStock("Chips"));
+        vendor.addMoney(1.00);
+        vendor.select("Chips");
+        assertEquals(3, vendor.getStock("Chips"));
+        assertEquals(0.00, vendor.getBalance());
+    }
+
+    @Test
+    void restockingExistingItemWithPrice() {
+        Vending vendor = new Vending(5, 5);
+        //try to change gum price fails
+        vendor.restock("Gum", 2, 9.99);
+        assertEquals(7, vendor.getStock("Gum"));
+        vendor.addMoney(0.50);
+        vendor.select("Gum");
+        assertEquals(6, vendor.getStock("Gum"));
+        assertEquals(0.0, vendor.getBalance());
+    }
+
+    @Test
+    void newItemWithInvalidPrice() {
+        Vending vendor = new Vending(5, 5);
+        // Try to add new items with a zero and a negative price
+        vendor.restock("Chips", 4, 0);
+        vendor.restock("Soda", 4, -1.00);
+        vendor.addMoney(5.00);
+        vendor.select("Chips");
+        vendor.select("Soda");
+        assertEquals(0, vendor.getStock("Chips"));
+        assertEquals(0, vendor.getStock("Soda"));
+        assertEquals(5.00, vendor.getBalance());
+    }
 }
