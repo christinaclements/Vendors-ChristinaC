@@ -65,6 +65,22 @@ class Vending {
             return 0;
         }
     }
+    /** adds more of an existing item to the machine's stock
+     * @param name The name of the item to restock
+     * @param amount How many pieces to add (must be positive)
+     */
+    void restock(String name, int amount) {
+        if (amount <= 0) {
+            System.out.println("Restock amount must be positive");
+        }
+        else if (Stock.containsKey(name)) {
+            Item item = Stock.get(name);
+            item.restock(amount);
+        }
+        else {
+            System.out.println("Sorry, don't know that item");
+        }
+    }
 }
 
 class Examples {
