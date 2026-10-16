@@ -160,6 +160,38 @@ class Vending {
         return mostPopular;
     }
 
+    /** sets the description of an item
+     * @param name The name of the item
+     * @param description What the item is, its benefits, or its uses
+     */
+    void setDescription(String name, String description){
+        if (!Stock.containsKey(name)){
+            System.out.println("Sorry, don't know that item");
+        }
+        else if (description == null || description.isEmpty()){
+            System.out.println("Description can't be empty");
+        }
+        else {
+            Item item = Stock.get(name);
+            item.description = description;
+        }
+    }
+
+    /** returns the details of an item (price, stock, and description) so a customer can check before buying
+     * @param name The name of the item
+     */
+    String getDetails(String name) {
+        if (Stock.containsKey(name)) {
+            Item item = Stock.get(name);
+            return name + " - $" + String.format("%.2f", item.price) + ", "
+                    + item.stock + " in stock. " + item.description;
+            //String format so it displays nice as $0.50
+        }
+        else {
+            return "Sorry, don't know that item";
+        }
+    }
+
     /** builds a text listing of every item, how many are in stock, and its price */
     String getInventory() {
         String result = "";

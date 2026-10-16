@@ -221,4 +221,30 @@ public class VendorTest {
         vendor.renameItem("Gum", "Bubblegum");
         assertEquals(2, vendor.getPurchaseCount("Bubblegum"));
     }
+    @Test
+    void descriptionShowsInDetails() {
+        Vending vendor = new Vending(5, 5);
+        vendor.setDescription("Candy", "Chocolate bar with caramel");
+        String details = vendor.getDetails("Candy");
+        assertTrue(details.contains("Chocolate bar with caramel"));
+        assertTrue(details.contains("$1.25"));
+        assertTrue(details.contains("5 in stock"));
+    }
+
+    @Test
+    void itemWithDefaultDescription() {
+        Vending vendor = new Vending(5, 5);
+        assertTrue(vendor.getDetails("Gum").contains("No description available"));
+    }
+
+    @Test
+    void invalidDescriptionIgnored() {
+        Vending vendor = new Vending(5, 5);
+        vendor.setDescription("Gum", "Mint flavored");
+        vendor.setDescription("Gum", "");
+        assertTrue(vendor.getDetails("Gum").contains("Mint flavored"));
+        assertEquals("Sorry, don't know that item", vendor.getDetails("Chips"));
+    }
+
+
 }
