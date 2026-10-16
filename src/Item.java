@@ -5,6 +5,7 @@ class Item {
     String description;
     String category;
     double discountPercent;
+    boolean bestseller;
 
     Item(double price, int numPieces) {
         this.price = price;
@@ -13,6 +14,7 @@ class Item {
         this.description = "No description available";
         this.category = "Uncategorized";
         this.discountPercent = 0;
+        this.bestseller = false;
     }
 
     double getCurrentPrice(){

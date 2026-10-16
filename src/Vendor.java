@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.ArrayList;
 
 
 /**
@@ -287,14 +288,57 @@ class Vending {
         }
     }
 
+    /** marks or unmarks an item as a bestseller
+     * @param name The name of the item
+     * @param isBestseller true to mark it, false to remove the mark
+     */
+    void setBestseller(String name, boolean isBestseller) {
+        if (Stock.containsKey(name)) {
+            Item item = Stock.get(name);
+            item.bestseller = isBestseller;
+        }
+        else {
+            System.out.println("Sorry, don't know that item");
+        }
+    }
+
+    /** returns true if the named item is marked as a bestseller, false otherwise
+     * @param name The name of the item
+     */
+    boolean isBestseller(String name) {
+        if (Stock.containsKey(name)) {
+            Item item = Stock.get(name);
+            return item.bestseller;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /** returns the names of all items marked as bestsellers, for quick access */
+    ArrayList<String> getBestsellers() {
+        ArrayList<String> bestsellers = new ArrayList<String>();
+        for (String name : Stock.keySet()) {
+            Item item = Stock.get(name);
+            if (item.bestseller) {
+                bestsellers.add(name);
+            }
+        }
+        return bestsellers;
+    }
+
     /** builds a text listing of every item, how many are in stock, and its price */
     String getInventory() {
         String result = "";
         for (String name : Stock.keySet()) {
             Item item = Stock.get(name);
-            result = result + name + ": " + item.stock + " in stock, $"
-                    + String.format("%.2f", item.getCurrentPrice()) + "\n";
+            String line = name + ": " + item.stock + " in stock, $"
+                    + String.format("%.2f", item.getCurrentPrice());
             //String format so it displays nice as $0.50
+            if (item.bestseller) {
+                line = line + " [Bestseller]";
+            }
+            result = result + line + "\n";
         }
         return result;
     }

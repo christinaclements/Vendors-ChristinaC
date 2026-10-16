@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
 
 public class VendorTest {
 
@@ -295,6 +296,53 @@ public class VendorTest {
         vendor.applyDiscount("Candy", 150);
         assertEquals(1.25, vendor.getPrice("Candy"));
     }
+
+    @Test
+    void markedItemIsBestseller() {
+        Vending vendor = new Vending(5, 5);
+        vendor.setBestseller("Candy", true);
+        assertTrue(vendor.isBestseller("Candy"));
+        assertFalse(vendor.isBestseller("Gum"));
+    }
+
+    @Test
+    void getBestsellersListsOnlyMarkedItems() {
+        Vending vendor = new Vending(5, 5);
+        vendor.restock("Chips", 5, 1.00);
+        vendor.setBestseller("Candy", true);
+        vendor.setBestseller("Chips", true);
+        ArrayList<String> bestsellers = vendor.getBestsellers();
+        assertEquals(2, bestsellers.size());
+        assertTrue(bestsellers.contains("Candy"));
+        assertTrue(bestsellers.contains("Chips"));
+        assertFalse(bestsellers.contains("Gum"));
+    }
+
+    @Test
+    void unmarkBestseller() {
+        Vending vendor = new Vending(5, 5);
+        vendor.setBestseller("Candy", true);
+        vendor.setBestseller("Candy", false);
+        assertFalse(vendor.isBestseller("Candy"));
+        assertEquals(0, vendor.getBestsellers().size());
+    }
+
+    @Test
+    void bestsellerShownInInventory() {
+        Vending vendor = new Vending(5, 5);
+        vendor.setBestseller("Candy", true);
+        String inventory = vendor.getInventory();
+        assertTrue(inventory.contains("Candy: 5 in stock, $1.25 [Bestseller]"));
+        assertFalse(inventory.contains("Gum: 5 in stock, $0.50 [Bestseller]"));
+    }
+
+    @Test
+    void markingUnknownItemDoesNothing() {
+        Vending vendor = new Vending(5, 5);
+        vendor.setBestseller("Chips", true);
+        assertEquals(0, vendor.getBestsellers().size());
+    }
+
 
 
 }
