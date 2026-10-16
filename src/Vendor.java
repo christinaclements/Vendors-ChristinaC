@@ -44,9 +44,9 @@ class Vending {
                 //checks item is in stock
                 System.out.println("Sorry, that item is out of stock");
             }
-            else if (balance >= item.price) {
+            else if (balance >= item.getCurrentPrice()) {
                 item.purchase(1);
-                this.balance = this.balance - item.price;
+                this.balance = this.balance - item.getCurrentPrice();
             }
             else
                 System.out.println("Gimme more money");
@@ -183,12 +183,107 @@ class Vending {
     String getDetails(String name) {
         if (Stock.containsKey(name)) {
             Item item = Stock.get(name);
-            return name + " - $" + String.format("%.2f", item.price) + ", "
+            return name + " - $" + String.format("%.2f", item.getCurrentPrice()) + ", "
                     + item.stock + " in stock. " + item.description;
             //String format so it displays nice as $0.50
         }
         else {
             return "Sorry, don't know that item";
+        }
+    }
+
+    /** returns the current price of an item (after any discount), or 0 if the item doesn't exist
+     * @param name The name of the item
+     */
+    double getPrice(String name) {
+        if (Stock.containsKey(name)) {
+            Item item = Stock.get(name);
+            return item.getCurrentPrice();
+        }
+        else {
+            return 0;
+        }
+    }
+
+    /** sets the category of an item, such as "Snacks" or "Drinks"
+     * @param name The name of the item
+     * @param category The category to put it in
+     */
+    void setCategory(String name, String category) {
+        if (!Stock.containsKey(name)) {
+            System.out.println("Sorry, don't know that item");
+        }
+        else if (category == null || category.isEmpty()) {
+            System.out.println("Category can't be empty");
+        }
+        else {
+            Item item = Stock.get(name);
+            item.category = category;
+        }
+    }
+
+    /** checks whether a discount percent is valid (more than 0 and less than 100) */
+    private boolean isValidDiscount(double percent) {
+        if (percent > 0 && percent < 100) {
+            return true;
+        }
+        else {
+            System.out.println("Discount must be between 0 and 100 percent");
+            return false;
+        }
+    }
+
+    /** puts one item on sale
+     * @param name The name of the item
+     * @param percent How much to take off, for example 20 for 20% off
+     */
+    void applyDiscount(String name, double percent) {
+        if (!Stock.containsKey(name)) {
+            System.out.println("Sorry, don't know that item");
+        }
+        else if (isValidDiscount(percent)) {
+            Item item = Stock.get(name);
+            item.discountPercent = percent;
+        }
+    }
+
+    /** ends the sale on one item, returning it to its original price
+     * @param name The name of the item
+     */
+    void removeDiscount(String name) {
+        if (Stock.containsKey(name)) {
+            Item item = Stock.get(name);
+            item.discountPercent = 0;
+        }
+        else {
+            System.out.println("Sorry, don't know that item");
+        }
+    }
+
+    /** puts every item in a category on sale
+     * @param category The category to discount
+     * @param percent How much to take off, for example 20 for 20% off
+     */
+    void applyCategoryDiscount(String category, double percent) {
+        if (isValidDiscount(percent)) {
+            for (String name : Stock.keySet()) {
+                Item item = Stock.get(name);
+                if (item.category.equals(category)) {
+                    item.discountPercent = percent;
+                }
+            }
+        }
+    }
+
+    /** ends the sale on every item in a category
+     * @param category The category to stop discounting
+     */
+    void removeCategoryDiscount(String category) {
+        for (String name : Stock.keySet()) {
+            Item item = Stock.get(name);
+            if (item.category.equals(category)) {
+                item.discountPercent = 0;
+            }
         }
     }
 
@@ -198,7 +293,7 @@ class Vending {
         for (String name : Stock.keySet()) {
             Item item = Stock.get(name);
             result = result + name + ": " + item.stock + " in stock, $"
-                    + String.format("%.2f", item.price) + "\n";
+                    + String.format("%.2f", item.getCurrentPrice()) + "\n";
             //String format so it displays nice as $0.50
         }
         return result;

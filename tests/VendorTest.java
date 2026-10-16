@@ -246,5 +246,55 @@ public class VendorTest {
         assertEquals("Sorry, don't know that item", vendor.getDetails("Chips"));
     }
 
+    @Test
+    void discountLowersPrice() {
+        Vending vendor = new Vending(5, 5);
+        vendor.applyDiscount("Candy", 20);
+        assertEquals(1.00, vendor.getPrice("Candy"), 0.001);
+        assertEquals(0.50, vendor.getPrice("Gum"), 0.001);
+    }
+
+    @Test
+    void buyAtDiscountedPrice() {
+        Vending vendor = new Vending(5, 5);
+        vendor.applyDiscount("Candy", 20);
+        vendor.addMoney(1.00);
+        vendor.select("Candy");
+        assertEquals(4, vendor.getStock("Candy"));
+        assertEquals(0.0, vendor.getBalance());
+    }
+
+    @Test
+    void removeDiscount() {
+        Vending vendor = new Vending(5, 5);
+        vendor.applyDiscount("Candy", 20);
+        vendor.removeDiscount("Candy");
+        assertEquals(1.25, vendor.getPrice("Candy"));
+    }
+
+    @Test
+    void categoryDiscountApplies() {
+        Vending vendor = new Vending(5, 5);
+        vendor.restock("Chips", 5, 1.00);
+        vendor.setCategory("Candy", "Snacks");
+        vendor.setCategory("Chips", "Snacks");
+        vendor.applyCategoryDiscount("Snacks", 50);
+        assertEquals(0.625, vendor.getPrice("Candy"));
+        assertEquals(0.50, vendor.getPrice("Chips"));
+        assertEquals(0.50, vendor.getPrice("Gum"));
+        vendor.removeCategoryDiscount("Snacks");
+        assertEquals(1.25, vendor.getPrice("Candy"));
+        assertEquals(1.00, vendor.getPrice("Chips"));
+    }
+
+    @Test
+    void invalidDiscountIsIgnored() {
+        Vending vendor = new Vending(5, 5);
+        vendor.applyDiscount("Candy", 0);
+        vendor.applyDiscount("Candy", -10);
+        vendor.applyDiscount("Candy", 150);
+        assertEquals(1.25, vendor.getPrice("Candy"));
+    }
+
 
 }
