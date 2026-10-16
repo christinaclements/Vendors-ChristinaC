@@ -132,6 +132,34 @@ class Vending {
         }
     }
 
+    /** returns how many times the named item has been purchased, or 0 if the item doesn't exist
+     * @param name The name of the item
+     */
+    int getPurchaseCount(String name) {
+        if (Stock.containsKey(name)) {
+            Item item = Stock.get(name);
+            return item.timesPurchased;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    /** returns the name of the item purchased the most, or "None" if nothing has been bought yet */
+    String getMostPopularItem() {
+        String mostPopular = "None";
+        int highestCount = 0;
+        for (String name : Stock.keySet()) {
+            Item item = Stock.get(name);
+            // Keep track of the item with the highest count seen so far
+            if (item.timesPurchased > highestCount) {
+                highestCount = item.timesPurchased;
+                mostPopular = name;
+            }
+        }
+        return mostPopular;
+    }
+
     /** builds a text listing of every item, how many are in stock, and its price */
     String getInventory() {
         String result = "";

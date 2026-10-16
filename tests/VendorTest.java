@@ -171,4 +171,54 @@ public class VendorTest {
         assertEquals(5, vendor.getStock("Candy"));
         assertEquals(5, vendor.getStock("Gum"));
     }
+    @Test
+    void purchasesCountedPerItem() {
+        Vending vendor = new Vending(5, 5);
+        vendor.addMoney(5.00);
+        vendor.select("Candy");
+        vendor.select("Candy");
+        vendor.select("Gum");
+        assertEquals(2, vendor.getPurchaseCount("Candy"));
+        assertEquals(1, vendor.getPurchaseCount("Gum"));
+    }
+
+    @Test
+    void failedPurchasesNotCounted() {
+        Vending vendor = new Vending(5, 0);
+        vendor.addMoney(0.25);
+        vendor.select("Candy");
+        vendor.addMoney(1.00);
+        vendor.select("Gum");
+        assertEquals(0, vendor.getPurchaseCount("Candy"));
+        assertEquals(0, vendor.getPurchaseCount("Gum"));
+    }
+
+    @Test
+    void mostPopularItemHasMostPurchases() {
+        Vending vendor = new Vending(5, 5);
+
+        // Buy 3 gum and 1 candy
+        vendor.addMoney(5.00);
+        vendor.select("Gum");
+        vendor.select("Gum");
+        vendor.select("Gum");
+        vendor.select("Candy");
+        assertEquals("Gum", vendor.getMostPopularItem());
+    }
+
+    @Test
+    void mostPopularItemBeforeAnyPurchases() {
+        Vending vendor = new Vending(5, 5);
+        assertEquals("None", vendor.getMostPopularItem());
+    }
+
+    @Test
+    void purchaseCountRenamedItem() {
+        Vending vendor = new Vending(5, 5);
+        vendor.addMoney(1.00);
+        vendor.select("Gum");
+        vendor.select("Gum");
+        vendor.renameItem("Gum", "Bubblegum");
+        assertEquals(2, vendor.getPurchaseCount("Bubblegum"));
+    }
 }
